@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estudos</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i data-lucide="book-open"></i>
+        </div>
+        <div>
+          <h1 class="logo-title">Organizador de estudos <span>Estudante</span></h1>
+          <p class="logo-sub">Organize seus estudos com mais precisão</p>
+        </div>
+      </div> 
+
+      <nav class="nav-tabs">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn active">
+          <i data-lucide="sparkles"></i><span>Resumo</span>
+        </button>
+        <button onclick="switchTab('table')" id="nav-table" class="tab-btn">
+          <i data-lucide="table"></i><span>Tabela de Registros</span>
+        </button>
+        <button onclick="switchTab('subjects')" id="nav-subjects" class="tab-btn">
+          <i data-lucide="library"></i><span>Matérias</span>
+        </button>
+        <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="tab-btn">
+          <i data-lucide="timer"></i><span>Tempo</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="tab-btn">
+          <i data-lucide="check-square"></i><span>Tarefas</span>
+        </button>
+        <button onclick="switchTab('planner')" id="nav-planner" class="tab-btn">
+          <i data-lucide="calendar"></i><span>Planner</span>
+        </button>
+        <button onclick="switchTab('notes')" id="nav-notes" class="tab-btn">
+          <i data-lucide="sticky-note"></i><span>Bloco de Notas</span>
+        </button>
+      </nav>
+
+      <div class="today-counter">
+        <i data-lucide="clock"></i>
+        <span id="header-today-time">0h 0m hoje</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <section id="tab-dashboard" class="tab-panel space-y-6">
+      <div class="welcome-banner">
+        <div>
+          <h2 class="text-2xl font-bold text-amber-900">Bons estudos!</h2>
+          <p class="text-sm text-amber-800/80">Mantenha a consistência e acompanhe seu progresso diário.</p>
+        </div>
+        <button onclick="openRecordModal()" class="btn-primary">
+          <i data-lucide="plus"></i> Registrar Estudo
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="stat-card">
+          <div class="stat-icon text-amber-600 bg-amber-100"><i data-lucide="clock"></i></div>
+          <div>
+            <p class="stat-label">Horas Estudadas Hoje</p>
+            <h3 id="stat-hours-today" class="stat-value">0h 0m</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon text-amber-700 bg-amber-100"><i data-lucide="book"></i></div>
+          <div>
+            <p class="stat-label">Registros Realizados</p>
+            <h3 id="stat-total-records" class="stat-value">0</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon text-emerald-700 bg-emerald-100"><i data-lucide="check-circle-2"></i></div>
+          <div>
+            <p class="stat-label">Tarefas Concluídas</p>
+            <h3 id="stat-tasks-completed" class="stat-value">0/0</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon text-amber-800 bg-amber-100"><i data-lucide="folder"></i></div>
+          <div>
+            <p class="stat-label">Matérias Ativas</p>
+            <h3 id="stat-active-subjects" class="stat-value">0</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+          <div class="content-box space-y-4">
+            <h3 class="box-title"><i data-lucide="bar-chart-2" class="text-amber-600"></i> Progresso das Matérias</h3>
+            <div id="dash-subjects-list" class="space-y-4"></div>
+          </div>
+
+          <div class="content-box space-y-4">
+            <h3 class="box-title"><i data-lucide="history" class="text-amber-600"></i> Últimas Sessões</h3>
+            <div id="dash-recent-records" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="content-box space-y-4">
+            <h3 class="box-title"><i data-lucide="calendar" class="text-amber-600"></i> Agenda de Hoje</h3>
+            <div id="dash-today-planner" class="space-y-2"></div>
+          </div>
+
+          <div class="content-box space-y-4">
+            <h3 class="box-title"><i data-lucide="list-todo" class="text-amber-600"></i> Tarefas Prioritárias</h3>
+            <div id="dash-pending-tasks" class="space-y-2"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-table" class="tab-panel hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-amber-950">Tabela de Registros de Estudo</h2>
+          <p class="text-sm text-amber-800/80">Controle completo com semanas, datas, condução, nota e observações.</p>
+        </div>
+        <button onclick="openRecordModal()" class="btn-primary">
+          <i data-lucide="plus"></i> Adicionar Registro
+        </button>
+      </div>
+
+      <div class="filter-box">
+        <div class="flex items-center justify-between border-b border-amber-200/80 pb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1">
+            <i data-lucide="filter" class="w-3.5 h-3.5"></i> Filtros de Pesquisa
+          </span>
+          <button onclick="resetFilters()" class="text-xs text-amber-700 hover:underline">Limpar Filtros</button>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
+          <input type="text" id="filter-search" oninput="renderStudyTable()" placeholder="Buscar título ou obs..." class="input-field">
+          
+          <select id="filter-subject" onchange="renderStudyTable()" class="input-field">
+            <option value="">Todas as Matérias</option>
+          </select>
+
+          <select id="filter-status" onchange="renderStudyTable()" class="input-field">
+            <option value="">Todos os Status</option>
+            <option value="Pendente">Pendente</option>
+            <option value="Em Andamento">Em Andamento</option>
+            <option value="Concluído">Concluído</option>
+          </select>
+
+          <select id="filter-grade" onchange="renderStudyTable()" class="input-field">
+            <option value="">Todas as Notas</option>
+            <option value="Alta">Nota Alta</option>
+            <option value="Média">Nota Média</option>
+            <option value="Baixa">Nota Baixa</option>
+          </select>
+
+          <select id="filter-conducao" onchange="renderStudyTable()" class="input-field">
+            <option value="">Todas as Conduções</option>
+            <option value="Teoria">Teoria</option>
+            <option value="Exercícios">Exercícios</option>
+            <option value="Revisão">Revisão</option>
+            <option value="Simulado">Simulado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="table-header">
+                <th class="p-3.5">Matéria / Conteúdo</th>
+                <th class="p-3.5">Data / Sem.</th>
+                <th class="p-3.5">Duração</th>
+                <th class="p-3.5">Condução</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5">Nota / Prioridade</th>
+                <th class="p-3.5">Observações</th>
+                <th class="p-3.5 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="study-table-body" class="divide-y divide-amber-100 text-xs text-amber-950">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-subjects" class="tab-panel hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-amber-950">Matérias e Conteúdos do Edital</h2>
+          <p class="text-sm text-amber-800/80">Organize suas disciplinas e checklist de tópicos.</p>
+        </div>
+        <button onclick="openSubjectModal()" class="btn-primary">
+          <i data-lucide="plus"></i> Nova Matéria
+        </button>
+      </div>
+
+      <div id="subjects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section id="tab-pomodoro" class="tab-panel hidden space-y-6">
+      <div class="max-w-md mx-auto">
+        <div class="content-box text-center space-y-6 shadow-md border-amber-200">
+          <div class="flex justify-center p-1 bg-amber-100/80 rounded-xl border border-amber-200">
+            <button onclick="setPomodoroMode('work')" id="pomo-mode-work" class="pomo-mode-btn active">Tempo (25m)</button>
+            <button onclick="setPomodoroMode('shortBreak')" id="pomo-mode-short" class="pomo-mode-btn">Pausa (5m)</button>
+            <button onclick="setPomodoroMode('longBreak')" id="pomo-mode-long" class="pomo-mode-btn">Pausa Longa (15m)</button>
+          </div>
+
+          <div class="text-left">
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Vincular Matéria Estudada</label>
+            <select id="pomo-subject-select" class="input-field"></select>
+          </div>
+
+          <div class="relative w-56 h-56 mx-auto flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90">
+              <circle cx="112" cy="112" r="95" stroke="currentColor" stroke-width="10" class="text-amber-100" fill="transparent" />
+              <circle id="pomo-progress-ring" cx="112" cy="112" r="95" stroke="currentColor" stroke-width="10" class="text-amber-500 transition-all duration-1000" fill="transparent" stroke-dasharray="596.9" stroke-dashoffset="0" stroke-linecap="round" />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="pomo-timer-display" class="text-4xl font-black text-amber-950 font-mono">25:00</span>
+              <span id="pomo-status-label" class="text-xs font-bold uppercase text-amber-700 tracking-wider mt-1">Timer</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-4">
+            <button onclick="togglePomodoro()" id="pomo-start-btn" class="w-14 h-14 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl flex items-center justify-center shadow-lg transition-transform transform hover:scale-105">
+              <i data-lucide="play" id="pomo-start-icon" class="w-6 h-6 fill-current"></i>
+            </button>
+            <button onclick="resetPomodoro()" class="w-11 h-11 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-2xl flex items-center justify-center border border-amber-300">
+              <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-tasks" class="tab-panel hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-amber-950">Tarefas & Metas</h2>
+          <p class="text-sm text-amber-800/80">Classifique suas tarefas por notas e prioridades.</p>
+        </div>
+        <button onclick="openTaskModal()" class="btn-primary">
+          <i data-lucide="plus"></i> Nova Tarefa
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-2 border-b border-amber-200 pb-3">
+        <button onclick="filterTasks('all')" id="task-filter-all" class="filter-tab-btn active">Todas</button>
+        <button onclick="filterTasks('pending')" id="task-filter-pending" class="filter-tab-btn">Pendentes</button>
+        <button onclick="filterTasks('completed')" id="task-filter-completed" class="filter-tab-btn">Concluídas</button>
+      </div>
+
+      <div id="tasks-container" class="space-y-3"></div>
+    </section>
+
+    <section id="tab-planner" class="tab-panel hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-amber-950">Planner Semanal de Blocos</h2>
+        <p class="text-sm text-amber-800/80">Sua rotina fixa de horários e estudos de Segunda a Domingo.</p>
+      </div>
+
+      <div id="planner-days-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4"></div>
+    </section>
+
+    <section id="tab-notes" class="tab-panel hidden space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-amber-950">Bloco de Anotações & Resumos</h2>
+        <p class="text-sm text-amber-800/80">Guarde resumos, links, lembretes ou ideias importantes.</p>
+      </div>
+
+      <div class="content-box space-y-3">
+        <textarea id="general-notes-input" oninput="saveGeneralNotes()" rows="12" placeholder="Escreva suas anotações aqui..." class="w-full bg-amber-50/50 border border-amber-200 rounded-xl p-4 text-sm text-amber-950 focus:outline-none focus:border-amber-500 leading-relaxed"></textarea>
+        <div class="flex items-center justify-between text-xs text-amber-700">
+          <span>Salvamento automático ativado</span>
+          <span id="notes-char-count">0 caracteres</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+ 
+  <div id="modal-record" class="modal-overlay hidden">
+    <div class="modal-box max-w-lg">
+      <div class="modal-header">
+        <h3 class="font-bold text-amber-950">Novo Registro de Estudo</h3>
+        <button onclick="closeRecordModal()" class="text-amber-700 hover:text-amber-950"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-record" onsubmit="saveRecord(event)" class="space-y-4 pt-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Matéria</label>
+            <select id="rec-subject-id" required class="input-field"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Título do Conteúdo</label>
+            <input type="text" id="rec-title" required placeholder="Ex: Regra de Três Composta" class="input-field">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Data</label>
+            <input type="date" id="rec-date" required class="input-field">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Duração (Min)</label>
+            <input type="number" id="rec-minutes" required min="1" value="60" class="input-field">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Semana</label>
+            <input type="text" id="rec-semana" placeholder="Semana 1" class="input-field">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Condução</label>
+            <select id="rec-conducao" class="input-field">
+              <option value="Teoria">Teoria</option>
+              <option value="Exercícios">Exercícios</option>
+              <option value="Revisão">Revisão</option>
+              <option value="Lei Seca">Lei Seca</option>
+              <option value="Simulado">Simulado</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Status</label>
+            <select id="rec-status" class="input-field">
+              <option value="Pendente">Pendente</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Concluído">Concluído</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Nota / Prioridade</label>
+            <select id="rec-grade" class="input-field">
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Observações</label>
+          <textarea id="rec-notes" rows="2" placeholder="Erros cometidos, percentual de acertos..." class="input-field"></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closeRecordModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Registro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-subject" class="modal-overlay hidden">
+    <div class="modal-box max-w-md">
+      <div class="modal-header">
+        <h3 class="font-bold text-amber-950">Nova Matéria</h3>
+        <button onclick="closeSubjectModal()" class="text-amber-700 hover:text-amber-950"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-subject" onsubmit="saveSubject(event)" class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Nome da Matéria</label>
+          <input type="text" id="subject-name" required placeholder="Ex: Matemática" class="input-field">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Cor Temática</label>
+          <div class="flex items-center space-x-3">
+            <input type="color" id="subject-color" value="#d97706" class="w-10 h-10 rounded-lg bg-transparent cursor-pointer border-0">
+            <span class="text-xs text-amber-800">Escolha uma cor de identificação</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closeSubjectModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar Matéria</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-topic" class="modal-overlay hidden">
+    <div class="modal-box max-w-md">
+      <div class="modal-header">
+        <h3 class="font-bold text-amber-950">Adicionar Tópico do Edital</h3>
+        <button onclick="closeTopicModal()" class="text-amber-700 hover:text-amber-950"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-topic" onsubmit="saveTopic(event)" class="space-y-4 pt-4">
+        <input type="hidden" id="topic-subject-id">
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Título do Tópico</label>
+          <input type="text" id="topic-title" required placeholder="Ex: Geometria Plana" class="input-field">
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closeTopicModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-primary">Adicionar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-task" class="modal-overlay hidden">
+    <div class="modal-box max-w-md">
+      <div class="modal-header">
+        <h3 class="font-bold text-amber-950">Nova Tarefa</h3>
+        <button onclick="closeTaskModal()" class="text-amber-700 hover:text-amber-950"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-task" onsubmit="saveTask(event)" class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Descrição</label>
+          <input type="text" id="task-title" required placeholder="Ex: Resolver 20 questões de crase" class="input-field">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Matéria (Opcional)</label>
+            <select id="task-subject-id" class="input-field"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-amber-900 mb-1">Nota / Prioridade</label>
+            <select id="task-grade" class="input-field">
+              <option value="Alta">Alta</option>
+              <option value="Média">Média</option>
+              <option value="Baixa">Baixa</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Data Limite</label>
+          <input type="date" id="task-date" class="input-field">
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closeTaskModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-primary">Criar Tarefa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-planner" class="modal-overlay hidden">
+    <div class="modal-box max-w-md">
+      <div class="modal-header">
+        <h3 class="font-bold text-amber-950">Agendar Horário no Planner</h3>
+        <button onclick="closePlannerModal()" class="text-amber-700 hover:text-amber-950"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="form-planner" onsubmit="savePlannerItem(event)" class="space-y-4 pt-4">
+        <input type="hidden" id="planner-day-key">
+        
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Horário (Ex: 08:00 - 09:30)</label>
+          <input type="text" id="planner-time" placeholder="08:00" class="input-field">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-amber-900 mb-1">Matéria</label>
+          <select id="planner-subject-id" class="input-field"></select>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-2">
+          <button type="button" onclick="closePlannerModal()" class="btn-secondary">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar no Planner</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #ffead2;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.profile-card {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.avatar-container img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #eca16f;
+    margin-bottom: 15px;
+}
+
+.profile-card h1 {
+    font-size: 2rem;
+    color: #50482c;
+}
+
+.tagline {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.content-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #000000;
+}
+
+.content-section h2 {
+    font-size: 1.4rem;
+    color: #50422c;
+    margin-bottom: 15px;
+}
+
+.fun-facts-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.fun-facts-list li {
+    padding: 8px 0;
+    font-size: 1.05rem;
+}
+
+
+button {
+    background-color: #dd8959;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #e68517;
+}
+
+.hidden {
+    display: none;
+}
+
+#surprise-text {
+    margin-top: 15px;
+    font-style: italic;
+    color: #e67e22;
+    font-weight: bold;
+}
